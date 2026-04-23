@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Diagnóstico MOVARE · Sua perfumaria está perdendo dinheiro?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #0A0A0A;
+      color: #2A2A2A;
+      line-height: 1.5;
+      padding: 0 0 24px;
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #F2F2F2;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      border-radius: 32px 32px 24px 24px;
+      overflow: hidden;
+    }
+
+    /* cabeçalho elegante */
+    .hero {
+      background: #1A1A1A;
+      padding: 32px 24px 24px;
+      color: white;
+      position: relative;
+    }
+
+    .hero-accent {
+      height: 4px;
+      background: #8B0000;
+      width: 80px;
+      margin-bottom: 20px;
+    }
+
+    h1, h2, h3, .serif-title {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: white;
+    }
+
+    .hero .sub {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 400;
+      font-size: 1rem;
+      color: #D0D0D0;
+      border-left: 3px solid #8B0000;
+      padding-left: 16px;
+      margin: 20px 0 8px;
+    }
+
+    .badge-movare {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .badge-movare span {
+      font-family: 'Cinzel', serif;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: #FFFFFF;
+    }
+
+    .badge-movare small {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    /* blocos de navegação */
+    .progress-container {
+      background: #2A2A2A;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #3A3A3A;
+    }
+
+    .steps {
+      display: flex;
+      gap: 6px;
+    }
+
+    .step-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      background: #5A5A5A;
+      transition: all 0.2s;
+    }
+
+    .step-dot.active {
+      background: #8B0000;
+      width: 24px;
+    }
+
+    .step-dot.completed {
+      background: #8B0000;
+    }
+
+    .progress-text {
+      color: #DDD;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* área do questionário */
+    .quiz-section {
+      background: #FFFFFF;
+      padding: 28px 24px 32px;
+      border-radius: 0 0 0 0;
+    }
+
+    .block-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #E0E0E0;
+      padding-bottom: 16px;
+    }
+
+    .block-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #1A1A1A;
+    }
+
+    .block-score {
+      font-weight: 700;
+      color: #8B0000;
+      background: #F9F0F0;
+      padding: 6px 14px;
+      border-radius: 40px;
+      font-size: 1rem;
+    }
+
+    .question-card {
+      margin-bottom: 28px;
+    }
+
+    .question-text {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 18px;
+      color: #1A1A1A;
+    }
+
+    .toggle-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      background: #F2F2F2;
+      border: 2px solid transparent;
+      padding: 14px 0;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #4A4A4A;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .toggle-btn.selected {
+      background: #8B0000;
+      color: white;
+      border-color: #8B0000;
+    }
+
+    .toggle-btn.sim.selected {
+      background: #1A8B00;
+      border-color: #1A8B00;
+    }
+
+    .toggle-btn.nao.selected {
+      background: #8B0000;
+      border-color: #8B0000;
+    }
+
+    /* navegação entre blocos */
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .btn {
+      padding: 16px 20px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      transition: 0.15s;
+      text-align: center;
+      flex: 1;
+    }
+
+    .btn-primary {
+      background: #8B0000;
+      color: white;
+      box-shadow: 0 6px 12px rgba(139,0,0,0.2);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #8B0000;
+      color: #8B0000;
+      font-weight: 600;
+    }
+
+    .btn-secondary {
+      background: #2A2A2A;
+      color: white;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    /* página de resultado */
+    .result-container {
+      background: #FFFFFF;
+      padding: 28px 24px 36px;
+    }
+
+    .total-score-box {
+      background: #1A1A1A;
+      color: white;
+      border-radius: 24px;
+      padding: 28px 20px;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .score-number {
+      font-family: 'Cinzel', serif;
+      font-size: 5rem;
+      font-weight: 700;
+      color: #8B0000;
+      background: #F2F2F2;
+      display: inline-block;
+      padding: 8px 32px;
+      border-radius: 80px;
+      margin: 12px 0 8px;
+    }
+
+    .diagnosis-level {
+      font-size: 1.8rem;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      margin: 16px 0 8px;
+    }
+
+    .action-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .action-item {
+      background: #F9F9F9;
+      border-left: 6px solid #8B0000;
+      padding: 16px 18px;
+      border-radius: 12px;
+    }
+
+    .whatsapp-cta {
+      background: #25D366;
+      color: #1A1A1A;
+      border-radius: 60px;
+      padding: 18px 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 24px 0 12px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      box-shadow: 0 6px 14px rgba(37,211,102,0.3);
+    }
+
+    .footer-note {
+      color: #666;
+      font-size: 0.8rem;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .logo-movare-mini {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Cinzel', serif;
+      font-weight: 600;
+      color: #8B0000;
+      margin-top: 20px;
+    }
+
+    /* utilitários */
+    .hidden {
+      display: none !important;
+    }
+
+    .text-small {
+      font-size: 0.9rem;
+    }
+
+    .mt-4 {
+      margin-top: 20px;
+    }
+
+    /* responsivo */
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+      .block-title {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="hero">
+    <div class="hero-accent"></div>
+    <h1>Sua perfumaria<br>está perdendo<br>dinheiro aqui?</h1>
+    <div class="sub">Checklist 40 pontos · descubra os vazamentos</div>
+    <div class="badge-movare">
+      <span>MOVARE</span>
+      <small>— Assessoria Remota para Perfumaria</small>
+    </div>
+  </div>
+
+  <!-- progresso dinâmico -->
+  <div class="progress-container">
+    <div class="steps" id="stepIndicators"></div>
+    <div class="progress-text" id="progressLabel">Bloco 1/5</div>
+  </div>
+
+  <!-- área principal: quiz ou resultado -->
+  <div id="quizArea" class="quiz-section"></div>
+  <div id="resultArea" class="result-container hidden"></div>
+
+  <!-- navegação fixa inferior -->
+  <div style="padding: 0 24px 24px; background: white;" id="navFooter">
+    <div class="nav-buttons" id="navButtons"></div>
+  </div>
+  <div class="footer-note">
+    MOVARE · Assessoria Remota para Perfumaria · @movare.br
+  </div>
+</div>
+
+<script>
+  (function(){
+    "use strict";
+
+    // ---------- DADOS DOS BLOCOS (40 perguntas) ----------
+    const BLOCKS = [
+      {
+        title: "ATENDIMENTO",
+        subtitle: "Seu atendimento encanta ou só responde?",
+        questions: [
+          "Respondo clientes em menos de 5 minutos no WhatsApp",
+          "Tenho respostas prontas para as dúvidas mais comuns",
+          "Minha equipe sabe argumentar e vender perfumes",
+          "Uso o nome do cliente durante a conversa",
+          "Peço feedback após cada venda",
+          "Ofereço amostras ou brindes com frequência",
+          "Faço follow-up 3 dias após a entrega",
+          "Meu atendimento gera indicações espontâneas"
+        ]
+      },
+      {
+        title: "OPERAÇÃO",
+        subtitle: "Processos ou caos?",
+        questions: [
+          "Tenho todos os produtos cadastrados em sistema/planilha",
+          "Controle de estoque é feito semanalmente",
+          "Sei exatamente o custo de cada envio",
+          "Tenho fornecedores fixos e negociados",
+          "Uso ERP (Tiny/Bling) ou planilha integrada",
+          "Meus pedidos não atrasam por falta de organização",
+          "Embalo os pedidos com padrão profissional",
+          "Consigo rastrear cada venda até a entrega"
+        ]
+      },
+      {
+        title: "CONTEÚDO",
+        subtitle: "Você aparece ou some?",
+        questions: [
+          "Posto no Instagram pelo menos 3x por semana",
+          "Meu conteúdo fala de perfumes de forma envolvente",
+          "Uso stories diariamente para gerar conexão",
+          "Tenho uma identidade visual consistente",
+          "Gravo vídeos mostrando os produtos",
+          "Respondo comentários e DMs rapidamente",
+          "Tenho um calendário editorial (mesmo simples)",
+          "Invisto em tráfego pago com estratégia"
+        ]
+      },
+      {
+        title: "FINANCEIRO",
+        subtitle: "O dinheiro tem direção?",
+        questions: [
+          "Sei minha margem de lucro por produto",
+          "Separo conta pessoal da conta da empresa",
+          "Tenho uma previsão de receita para o próximo mês",
+          "Controlo entradas e saídas com planilha/sistema",
+          "Sei qual é o meu ticket médio atual",
+          "Tenho um fundo de reserva para reposição de estoque",
+          "Analiso o financeiro mensalmente com dados reais",
+          "Sei quais produtos dão prejuízo e estou corrigindo"
+        ]
+      },
+      {
+        title: "FIDELIZAÇÃO",
+        subtitle: "Cliente volta ou some?",
+        questions: [
+          "Tenho lista de clientes VIP",
+          "Envio mensagens personalizadas para recompra",
+          "Ofereço desconto progressivo ou clube de assinatura",
+          "Registro data de aniversário dos clientes",
+          "Mantenho contato pós-venda sem ser chato",
+          "Tenho um programa de fidelidade ativo",
+          "Peço avaliação/publicação de fotos com produto",
+          "Mais de 30% do faturamento vem de clientes recorrentes"
+        ]
+      }
+    ];
+
+    // Estado
+    let currentBlockIndex = 0;
+    let answers = BLOCKS.map(block => new Array(block.questions.length).fill(null)); // null, true, false
+    let quizCompleted = false;
+
+    // Elementos
+    const quizArea = document.getElementById('quizArea');
+    const resultArea = document.getElementById('resultArea');
+    const navFooter = document.getElementById('navFooter');
+    const navButtonsDiv = document.getElementById('navButtons');
+    const stepIndicators = document.getElementById('stepIndicators');
+    const progressLabel = document.getElementById('progressLabel');
+
+    // ---------- RENDERIZAÇÃO ----------
+    function render() {
+      if (quizCompleted) {
+        showResultPage();
+        return;
+      }
+      showQuizBlock(currentBlockIndex);
+      updateProgressUI();
+      renderNavButtons();
+    }
+
+    function updateProgressUI() {
+      const total = BLOCKS.length;
+      let html = '';
+      for (let i = 0; i < total; i++) {
+        let cls = 'step-dot';
+        if (i === currentBlockIndex) cls += ' active';
+        else if (isBlockComplete(i)) cls += ' completed';
+        html += `<div class="${cls}"></div>`;
+      }
+      stepIndicators.innerHTML = html;
+      progressLabel.innerText = `Bloco ${currentBlockIndex+1}/${total} · ${BLOCKS[currentBlockIndex].title}`;
+    }
+
+    function isBlockComplete(blockIdx) {
+      return answers[blockIdx].every(a => a !== null);
+    }
+
+    function calculateBlockScore(blockIdx) {
+      return answers[blockIdx].filter(a => a === true).length;
+    }
+
+    function calculateTotalScore() {
+      return answers.flat().filter(a => a === true).length;
+    }
+
+    function showQuizBlock(index) {
+      const block = BLOCKS[index];
+      const blockAnswers = answers[index];
+      const blockScore = calculateBlockScore(index);
+      
+      let html = `
+        <div class="block-header">
+          <span class="block-title">${block.title}</span>
+          <span class="block-score">${blockScore}/${block.questions.length}</span>
+        </div>
+        <p style="margin-bottom: 20px; color: #4A4A4A;">${block.subtitle}</p>
+      `;
+
+      block.questions.forEach((q, qIdx) => {
+        const answer = blockAnswers[qIdx];
+        const qNumber = qIdx + 1;
+        html += `
+          <div class="question-card">
+            <div class="question-text">${qNumber}. ${q}</div>
+            <div class="toggle-group">
+              <div class="toggle-btn sim ${answer === true ? 'selected' : ''}" data-block="${index}" data-q="${qIdx}" data-value="true">SIM</div>
+              <div class="toggle-btn nao ${answer === false ? 'selected' : ''}" data-block="${index}" data-q="${qIdx}" data-value="false">NÃO</div>
+            </div>
+          </div>
+        `;
+      });
+
+      quizArea.innerHTML = html;
+
+      // attach events
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const blockIdx = parseInt(btn.dataset.block);
+          const qIdx = parseInt(btn.dataset.q);
+          const value = btn.dataset.value === 'true';
+          
+          // set answer
+          answers[blockIdx][qIdx] = value;
+          
+          // re-render somente bloco (para performance)
+          showQuizBlock(blockIdx);
+          updateProgressUI();
+          renderNavButtons(); // pode habilitar próximo
+        });
+      });
+    }
+
+    function renderNavButtons() {
+      const isLast = currentBlockIndex === BLOCKS.length - 1;
+      const blockComplete = isBlockComplete(currentBlockIndex);
+      const totalBlocks = BLOCKS.length;
+      
+      let html = '';
+      if (currentBlockIndex > 0) {
+        html += `<button class="btn btn-outline" id="prevBtn">← Anterior</button>`;
+      } else {
+        html += `<div></div>`; // espaço
+      }
+
+      if (!isLast) {
+        html += `<button class="btn btn-primary" id="nextBtn" ${!blockComplete ? 'disabled' : ''}>Próximo →</button>`;
+      } else {
+        // último bloco: botão "Ver resultado"
+        html += `<button class="btn btn-primary" id="finishBtn" ${!blockComplete ? 'disabled' : ''}>Ver diagnóstico 🔍</button>`;
+      }
+
+      navButtonsDiv.innerHTML = html;
+
+      if (currentBlockIndex > 0) {
+        document.getElementById('prevBtn')?.addEventListener('click', () => {
+          if (currentBlockIndex > 0) {
+            currentBlockIndex--;
+            render();
+          }
+        });
+      }
+
+      if (!isLast) {
+        document.getElementById('nextBtn')?.addEventListener('click', () => {
+          if (blockComplete && currentBlockIndex < totalBlocks - 1) {
+            currentBlockIndex++;
+            render();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+      } else {
+        document.getElementById('finishBtn')?.addEventListener('click', () => {
+          if (blockComplete) {
+            // verifica se todos blocos tem respostas? não obrigatório, mas ok
+            quizCompleted = true;
+            render();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+      }
+    }
+
+    // ---------- PÁGINA DE RESULTADO ----------
+    function showResultPage() {
+      quizArea.classList.add('hidden');
+      resultArea.classList.remove('hidden');
+      navFooter.style.display = 'none'; // esconde nav de baixo no resultado
+      
+      const totalScore = calculateTotalScore();
+      const maxScore = 40;
+      
+      let diagnosisText = '';
+      let diagnosisClass = '';
+      let actionSummary = '';
+      
+      if (totalScore <= 14) {
+        diagnosisText = 'ALERTA CRÍTICO';
+        diagnosisClass = '#8B0000';
+        actionSummary = 'Sua perfumaria está perdendo dinheiro em várias frentes. Processos ausentes, atendimento reativo e sem dados.';
+      } else if (totalScore <= 24) {
+        diagnosisText = 'ATENÇÃO NECESSÁRIA';
+        diagnosisClass = '#B55A00';
+        actionSummary = 'Boas intenções, mas execução inconsistente. Pontos críticos travam o crescimento.';
+      } else if (totalScore <= 32) {
+        diagnosisText = 'EM DESENVOLVIMENTO';
+        diagnosisClass = '#2A6B9C';
+        actionSummary = 'No caminho certo, mas ainda há muito a ganhar. Precisa de consistência e automação.';
+      } else {
+        diagnosisText = 'OPERAÇÃO MADURA';
+        diagnosisClass = '#1A8B00';
+        actionSummary = 'Estruturada! Hora de escalar sem trabalhar mais — com a equipe certa.';
+      }
+
+      // ações rápidas por bloco (resumo)
+      const atendimentoScore = calculateBlockScore(0);
+      const operacaoScore = calculateBlockScore(1);
+      const conteudoScore = calculateBlockScore(2);
+      const financeiroScore = calculateBlockScore(3);
+      const fidelizacaoScore = calculateBlockScore(4);
+
+      let actionsHtml = `
+        <div class="action-item"><strong>📱 ATENDIMENTO (${atendimentoScore}/8)</strong><br>${atendimentoScore<5 ? 'Crie 5 respostas rápidas no WhatsApp.' : 'Ótimo! Mantenha follow-up.'}</div>
+        <div class="action-item"><strong>⚙️ OPERAÇÃO (${operacaoScore}/8)</strong><br>${operacaoScore<5 ? 'Cadastre produtos no ERP Tiny/Bling.' : 'Padronize embalagens.'}</div>
+        <div class="action-item"><strong>📸 CONTEÚDO (${conteudoScore}/8)</strong><br>${conteudoScore<5 ? 'Poste 1x por semana consistente.' : 'Invista em tráfego pago.'}</div>
+        <div class="action-item"><strong>💰 FINANCEIRO (${financeiroScore}/8)</strong><br>${financeiroScore<5 ? 'Planilha de margem por produto.' : 'Projete próximo mês.'}</div>
+        <div class="action-item"><strong>🤝 FIDELIZAÇÃO (${fidelizacaoScore}/8)</strong><br>${fidelizacaoScore<5 ? 'Lista VIP e mensagem personalizada.' : 'Crie clube de assinatura.'}</div>
+      `;
+
+      resultArea.innerHTML = `
+        <div class="total-score-box">
+          <div style="font-size:1.2rem;">PONTUAÇÃO TOTAL</div>
+          <div class="score-number">${totalScore}/40</div>
+          <div class="diagnosis-level" style="color: ${diagnosisClass};">${diagnosisText}</div>
+          <p style="margin-top:12px; opacity:0.9;">${actionSummary}</p>
+        </div>
+        
+        <h3 style="font-family:'Cinzel'; margin-bottom:16px;">⚡ Ações imediatas</h3>
+        <div class="action-cards">
+          ${actionsHtml}
+        </div>
+
+        <a href="https://wa.me/5571983136600?text=Ol%C3%A1%2C%20fiz%20o%20diagn%C3%B3stico%20MOVARE%20e%20quero%20conversar%20sobre%20minha%20perfumaria" target="_blank" class="whatsapp-cta">
+          💬 QUERO DIAGNÓSTICO GRATUITO DE 20MIN
+        </a>
+        <p style="text-align:center; margin:8px 0 20px; font-size:0.9rem;">Fale com especialista · sem compromisso</p>
+        
+        <div style="display:flex; gap:12px;">
+          <button class="btn btn-secondary" id="restartBtn">Refazer diagnóstico</button>
+          <button class="btn btn-outline" id="shareResultBtn">📤 Compartilhar</button>
+        </div>
+        <div class="logo-movare-mini">
+          <span>MOVARE</span> — Assessoria Remota para Perfumaria
+        </div>
+      `;
+
+      document.getElementById('restartBtn').addEventListener('click', () => {
+        // reset
+        answers = BLOCKS.map(block => new Array(block.questions.length).fill(null));
+        currentBlockIndex = 0;
+        quizCompleted = false;
+        navFooter.style.display = 'block';
+        quizArea.classList.remove('hidden');
+        resultArea.classList.add('hidden');
+        render();
+      });
+
+      document.getElementById('shareResultBtn').addEventListener('click', () => {
+        const shareText = `Minha perfumaria marcou ${totalScore}/40 no diagnóstico MOVARE: ${diagnosisText}. Faça o teste gratuito!`;
+        if (navigator.share) {
+          navigator.share({ title: 'Diagnóstico MOVARE', text: shareText, url: window.location.href });
+        } else {
+          alert('Copie o link e compartilhe: ' + shareText);
+        }
+      });
+    }
+
+    // Inicializa
+    render();
+  })();
+</script>
+</body>
+</html>
