@@ -32,7 +32,6 @@
       overflow: hidden;
     }
 
-    /* cabeçalho elegante */
     .hero {
       background: #1A1A1A;
       padding: 32px 24px 24px;
@@ -89,7 +88,6 @@
       opacity: 0.8;
     }
 
-    /* blocos de navegação */
     .progress-container {
       background: #2A2A2A;
       padding: 12px 24px;
@@ -127,7 +125,6 @@
       font-size: 0.9rem;
     }
 
-    /* área do questionário */
     .quiz-section {
       background: #FFFFFF;
       padding: 28px 24px 32px;
@@ -206,7 +203,6 @@
       border-color: #8B0000;
     }
 
-    /* navegação entre blocos */
     .nav-buttons {
       display: flex;
       gap: 12px;
@@ -249,7 +245,6 @@
       pointer-events: none;
     }
 
-    /* página de resultado */
     .result-container {
       background: #FFFFFF;
       padding: 28px 24px 36px;
@@ -331,7 +326,6 @@
       margin-top: 20px;
     }
 
-    /* utilitários */
     .hidden {
       display: none !important;
     }
@@ -344,7 +338,6 @@
       margin-top: 20px;
     }
 
-    /* responsivo */
     @media (max-width: 480px) {
       .hero h1 {
         font-size: 1.8rem;
@@ -360,24 +353,21 @@
   <div class="hero">
     <div class="hero-accent"></div>
     <h1>Sua perfumaria<br>está perdendo<br>dinheiro aqui?</h1>
-    <div class="sub">Checklist 40 pontos · descubra os vazamentos</div>
+    <div class="sub">Checklist 32 pontos · descubra os vazamentos</div>
     <div class="badge-movare">
       <span>MOVARE</span>
       <small>— Assessoria Remota para Perfumaria</small>
     </div>
   </div>
 
-  <!-- progresso dinâmico -->
   <div class="progress-container">
     <div class="steps" id="stepIndicators"></div>
-    <div class="progress-text" id="progressLabel">Bloco 1/5</div>
+    <div class="progress-text" id="progressLabel">Bloco 1/4</div>
   </div>
 
-  <!-- área principal: quiz ou resultado -->
   <div id="quizArea" class="quiz-section"></div>
   <div id="resultArea" class="result-container hidden"></div>
 
-  <!-- navegação fixa inferior -->
   <div style="padding: 0 24px 24px; background: white;" id="navFooter">
     <div class="nav-buttons" id="navButtons"></div>
   </div>
@@ -390,7 +380,7 @@
   (function(){
     "use strict";
 
-    // ---------- DADOS DOS BLOCOS (40 perguntas) ----------
+    // ---------- DADOS DOS BLOCOS (32 perguntas - sem financeiro) ----------
     const BLOCKS = [
       {
         title: "ATENDIMENTO",
@@ -435,20 +425,6 @@
         ]
       },
       {
-        title: "FINANCEIRO",
-        subtitle: "O dinheiro tem direção?",
-        questions: [
-          "Sei minha margem de lucro por produto",
-          "Separo conta pessoal da conta da empresa",
-          "Tenho uma previsão de receita para o próximo mês",
-          "Controlo entradas e saídas com planilha/sistema",
-          "Sei qual é o meu ticket médio atual",
-          "Tenho um fundo de reserva para reposição de estoque",
-          "Analiso o financeiro mensalmente com dados reais",
-          "Sei quais produtos dão prejuízo e estou corrigindo"
-        ]
-      },
-      {
         title: "FIDELIZAÇÃO",
         subtitle: "Cliente volta ou some?",
         questions: [
@@ -466,7 +442,7 @@
 
     // Estado
     let currentBlockIndex = 0;
-    let answers = BLOCKS.map(block => new Array(block.questions.length).fill(null)); // null, true, false
+    let answers = BLOCKS.map(block => new Array(block.questions.length).fill(null));
     let quizCompleted = false;
 
     // Elementos
@@ -477,7 +453,6 @@
     const stepIndicators = document.getElementById('stepIndicators');
     const progressLabel = document.getElementById('progressLabel');
 
-    // ---------- RENDERIZAÇÃO ----------
     function render() {
       if (quizCompleted) {
         showResultPage();
@@ -542,20 +517,17 @@
 
       quizArea.innerHTML = html;
 
-      // attach events
       document.querySelectorAll('.toggle-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const blockIdx = parseInt(btn.dataset.block);
           const qIdx = parseInt(btn.dataset.q);
           const value = btn.dataset.value === 'true';
           
-          // set answer
           answers[blockIdx][qIdx] = value;
           
-          // re-render somente bloco (para performance)
           showQuizBlock(blockIdx);
           updateProgressUI();
-          renderNavButtons(); // pode habilitar próximo
+          renderNavButtons();
         });
       });
     }
@@ -569,13 +541,12 @@
       if (currentBlockIndex > 0) {
         html += `<button class="btn btn-outline" id="prevBtn">← Anterior</button>`;
       } else {
-        html += `<div></div>`; // espaço
+        html += `<div></div>`;
       }
 
       if (!isLast) {
         html += `<button class="btn btn-primary" id="nextBtn" ${!blockComplete ? 'disabled' : ''}>Próximo →</button>`;
       } else {
-        // último bloco: botão "Ver resultado"
         html += `<button class="btn btn-primary" id="finishBtn" ${!blockComplete ? 'disabled' : ''}>Ver diagnóstico 🔍</button>`;
       }
 
@@ -601,7 +572,6 @@
       } else {
         document.getElementById('finishBtn')?.addEventListener('click', () => {
           if (blockComplete) {
-            // verifica se todos blocos tem respostas? não obrigatório, mas ok
             quizCompleted = true;
             render();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -610,28 +580,27 @@
       }
     }
 
-    // ---------- PÁGINA DE RESULTADO ----------
     function showResultPage() {
       quizArea.classList.add('hidden');
       resultArea.classList.remove('hidden');
-      navFooter.style.display = 'none'; // esconde nav de baixo no resultado
+      navFooter.style.display = 'none';
       
       const totalScore = calculateTotalScore();
-      const maxScore = 40;
+      const maxScore = 32;
       
       let diagnosisText = '';
       let diagnosisClass = '';
       let actionSummary = '';
       
-      if (totalScore <= 14) {
+      if (totalScore <= 11) {
         diagnosisText = 'ALERTA CRÍTICO';
         diagnosisClass = '#8B0000';
         actionSummary = 'Sua perfumaria está perdendo dinheiro em várias frentes. Processos ausentes, atendimento reativo e sem dados.';
-      } else if (totalScore <= 24) {
+      } else if (totalScore <= 19) {
         diagnosisText = 'ATENÇÃO NECESSÁRIA';
         diagnosisClass = '#B55A00';
         actionSummary = 'Boas intenções, mas execução inconsistente. Pontos críticos travam o crescimento.';
-      } else if (totalScore <= 32) {
+      } else if (totalScore <= 26) {
         diagnosisText = 'EM DESENVOLVIMENTO';
         diagnosisClass = '#2A6B9C';
         actionSummary = 'No caminho certo, mas ainda há muito a ganhar. Precisa de consistência e automação.';
@@ -641,25 +610,22 @@
         actionSummary = 'Estruturada! Hora de escalar sem trabalhar mais — com a equipe certa.';
       }
 
-      // ações rápidas por bloco (resumo)
       const atendimentoScore = calculateBlockScore(0);
       const operacaoScore = calculateBlockScore(1);
       const conteudoScore = calculateBlockScore(2);
-      const financeiroScore = calculateBlockScore(3);
-      const fidelizacaoScore = calculateBlockScore(4);
+      const fidelizacaoScore = calculateBlockScore(3);
 
       let actionsHtml = `
-        <div class="action-item"><strong>📱 ATENDIMENTO (${atendimentoScore}/8)</strong><br>${atendimentoScore<5 ? 'Crie 5 respostas rápidas no WhatsApp.' : 'Ótimo! Mantenha follow-up.'}</div>
-        <div class="action-item"><strong>⚙️ OPERAÇÃO (${operacaoScore}/8)</strong><br>${operacaoScore<5 ? 'Cadastre produtos no ERP Tiny/Bling.' : 'Padronize embalagens.'}</div>
-        <div class="action-item"><strong>📸 CONTEÚDO (${conteudoScore}/8)</strong><br>${conteudoScore<5 ? 'Poste 1x por semana consistente.' : 'Invista em tráfego pago.'}</div>
-        <div class="action-item"><strong>💰 FINANCEIRO (${financeiroScore}/8)</strong><br>${financeiroScore<5 ? 'Planilha de margem por produto.' : 'Projete próximo mês.'}</div>
-        <div class="action-item"><strong>🤝 FIDELIZAÇÃO (${fidelizacaoScore}/8)</strong><br>${fidelizacaoScore<5 ? 'Lista VIP e mensagem personalizada.' : 'Crie clube de assinatura.'}</div>
+        <div class="action-item"><strong>📱 ATENDIMENTO (${atendimentoScore}/8)</strong><br>${atendimentoScore<5 ? 'Crie 5 respostas rápidas no WhatsApp. Treine equipe em argumentação.' : 'Ótimo! Mantenha follow-up e personalização.'}</div>
+        <div class="action-item"><strong>⚙️ OPERAÇÃO (${operacaoScore}/8)</strong><br>${operacaoScore<5 ? 'Cadastre produtos no ERP Tiny/Bling. Padronize embalagens.' : 'Processos sólidos! Otimize logística.'}</div>
+        <div class="action-item"><strong>📸 CONTEÚDO (${conteudoScore}/8)</strong><br>${conteudoScore<5 ? 'Poste consistentemente 1x por semana. Use stories diários.' : 'Invista em tráfego pago e vídeos.'}</div>
+        <div class="action-item"><strong>🤝 FIDELIZAÇÃO (${fidelizacaoScore}/8)</strong><br>${fidelizacaoScore<5 ? 'Crie lista VIP. Mande mensagens personalizadas pós-venda.' : 'Lance clube de assinatura ou programa de pontos.'}</div>
       `;
 
       resultArea.innerHTML = `
         <div class="total-score-box">
           <div style="font-size:1.2rem;">PONTUAÇÃO TOTAL</div>
-          <div class="score-number">${totalScore}/40</div>
+          <div class="score-number">${totalScore}/32</div>
           <div class="diagnosis-level" style="color: ${diagnosisClass};">${diagnosisText}</div>
           <p style="margin-top:12px; opacity:0.9;">${actionSummary}</p>
         </div>
@@ -684,7 +650,6 @@
       `;
 
       document.getElementById('restartBtn').addEventListener('click', () => {
-        // reset
         answers = BLOCKS.map(block => new Array(block.questions.length).fill(null));
         currentBlockIndex = 0;
         quizCompleted = false;
@@ -695,7 +660,7 @@
       });
 
       document.getElementById('shareResultBtn').addEventListener('click', () => {
-        const shareText = `Minha perfumaria marcou ${totalScore}/40 no diagnóstico MOVARE: ${diagnosisText}. Faça o teste gratuito!`;
+        const shareText = `Minha perfumaria marcou ${totalScore}/32 no diagnóstico MOVARE: ${diagnosisText}. Faça o teste gratuito!`;
         if (navigator.share) {
           navigator.share({ title: 'Diagnóstico MOVARE', text: shareText, url: window.location.href });
         } else {
@@ -704,7 +669,6 @@
       });
     }
 
-    // Inicializa
     render();
   })();
 </script>
