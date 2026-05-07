@@ -24,7 +24,6 @@
       position: relative;
     }
 
-    /* Background elegante com efeito de perfume/lençol */
     body::before {
       content: '';
       position: fixed;
@@ -46,7 +45,6 @@
       z-index: -2;
     }
 
-    /* Efeito de lençol/tecido fluido */
     body::after {
       content: '';
       position: fixed;
@@ -73,7 +71,6 @@
       50% { transform: rotate(-12deg) scale(1.02); }
     }
 
-    /* Silhueta sutil de perfume */
     .perfume-silhouette {
       position: fixed;
       bottom: 0;
@@ -103,7 +100,6 @@
       z-index: 10;
     }
 
-    /* Header elegante com transparência */
     .hero {
       background: linear-gradient(135deg, #1A0808 0%, #0D0505 100%);
       padding: 32px 24px 24px;
@@ -467,13 +463,129 @@
       }
     }
 
-    /* Detalhe de luxo */
     .luxury-sparkle {
       position: absolute;
       width: 100%;
       height: 100%;
       pointer-events: none;
       z-index: 5;
+    }
+
+    /* Novos estilos para o formulário de captura */
+    .lead-capture {
+      padding: 28px 24px;
+      background: #FFF;
+    }
+
+    .lead-capture h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+      color: #1A0808;
+    }
+
+    .lead-capture .subtitle {
+      font-size: 0.9rem;
+      color: #6A4A4A;
+      margin-bottom: 24px;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      color: #2A2A2A;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #E0D0D0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: 'Montserrat', sans-serif;
+      transition: all 0.2s;
+      background: #FAFAFA;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: #8B0000;
+      background: #FFF;
+      box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.05);
+    }
+
+    .input-field.error {
+      border-color: #CC0000;
+      background: #FFF5F5;
+    }
+
+    .error-message {
+      color: #CC0000;
+      font-size: 0.8rem;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .submit-capture {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #8B0000, #6B0000);
+      color: white;
+      border: none;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      font-family: 'Montserrat', sans-serif;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 6px 16px rgba(139, 0, 0, 0.3);
+    }
+
+    .submit-capture:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(139, 0, 0, 0.4);
+    }
+
+    .submit-capture:disabled {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .skip-link {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+      color: #A08080;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .skip-link:hover {
+      color: #8B0000;
+    }
+
+    .secure-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 16px;
+      font-size: 0.75rem;
+      color: #A08080;
     }
   </style>
 </head>
@@ -583,7 +695,12 @@
 
     function render() {
       if (quizCompleted) {
-        showResultPage();
+        const leadCaptured = sessionStorage.getItem('movare_lead_captured');
+        if (!leadCaptured) {
+          showLeadCaptureForm();
+        } else {
+          showResultPage();
+        }
         return;
       }
       showQuizBlock(currentBlockIndex);
@@ -707,12 +824,155 @@
       }
     }
 
+    function showLeadCaptureForm() {
+      quizArea.classList.add('hidden');
+      resultArea.classList.remove('hidden');
+      navFooter.style.display = 'none';
+
+      resultArea.innerHTML = `
+        <div class="lead-capture">
+          <div style="text-align:center; margin-bottom:24px;">
+            <span style="font-size:3rem; display:block; margin-bottom:12px;">🔐</span>
+            <h3>Seu diagnóstico está pronto!</h3>
+            <p class="subtitle">Insira seus dados para ver o resultado completo e receber recomendações personalizadas.</p>
+          </div>
+
+          <form id="leadForm" onsubmit="return false;">
+            <div class="input-group">
+              <label for="leadNome">Nome completo *</label>
+              <input type="text" id="leadNome" class="input-field" placeholder="Seu nome completo" required autocomplete="name">
+              <div class="error-message" id="nomeError">Por favor, insira seu nome completo (mínimo 2 palavras).</div>
+            </div>
+
+            <div class="input-group">
+              <label for="leadEmail">E-mail *</label>
+              <input type="email" id="leadEmail" class="input-field" placeholder="seu@email.com" required autocomplete="email">
+              <div class="error-message" id="emailError">Por favor, insira um e-mail válido.</div>
+            </div>
+
+            <div class="input-group">
+              <label for="leadTelefone">WhatsApp (com DDD) *</label>
+              <input type="tel" id="leadTelefone" class="input-field" placeholder="(11) 99999-9999" required autocomplete="tel">
+              <div class="error-message" id="telefoneError">Por favor, insira um número de WhatsApp válido com DDD.</div>
+            </div>
+
+            <button type="submit" class="submit-capture" id="submitLeadBtn">
+              VER MEU DIAGNÓSTICO COMPLETO →
+            </button>
+          </form>
+
+          <span class="skip-link" id="skipLeadBtn">Prefiro ver o resultado sem cadastro</span>
+
+          <div class="secure-note">
+            🔒 Seus dados estão 100% seguros e não serão compartilhados.
+          </div>
+        </div>
+      `;
+
+      setTimeout(() => {
+        const nomeInput = document.getElementById('leadNome');
+        const emailInput = document.getElementById('leadEmail');
+        const telefoneInput = document.getElementById('leadTelefone');
+        const submitBtn = document.getElementById('submitLeadBtn');
+        const skipBtn = document.getElementById('skipLeadBtn');
+
+        telefoneInput.addEventListener('input', (e) => {
+          let value = e.target.value.replace(/\D/g, '');
+          if (value.length > 0) {
+            if (value.length <= 2) {
+              value = `(${value}`;
+            } else if (value.length <= 7) {
+              value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+            } else {
+              value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7, 11)}`;
+            }
+          }
+          e.target.value = value;
+        });
+
+        function validateForm() {
+          let valid = true;
+
+          const nome = nomeInput.value.trim();
+          if (nome.length < 3 || !nome.includes(' ')) {
+            document.getElementById('nomeError').classList.add('show');
+            nomeInput.classList.add('error');
+            valid = false;
+          } else {
+            document.getElementById('nomeError').classList.remove('show');
+            nomeInput.classList.remove('error');
+          }
+
+          const email = emailInput.value.trim();
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            document.getElementById('emailError').classList.add('show');
+            emailInput.classList.add('error');
+            valid = false;
+          } else {
+            document.getElementById('emailError').classList.remove('show');
+            emailInput.classList.remove('error');
+          }
+
+          const telefone = telefoneInput.value.replace(/\D/g, '');
+          if (telefone.length < 10 || telefone.length > 11) {
+            document.getElementById('telefoneError').classList.add('show');
+            telefoneInput.classList.add('error');
+            valid = false;
+          } else {
+            document.getElementById('telefoneError').classList.remove('show');
+            telefoneInput.classList.remove('error');
+          }
+
+          return valid;
+        }
+
+        submitBtn.addEventListener('click', () => {
+          if (validateForm()) {
+            const leadData = {
+              nome: nomeInput.value.trim(),
+              email: emailInput.value.trim(),
+              telefone: telefoneInput.value.trim(),
+              data_captura: new Date().toISOString(),
+              pontuacao_total: calculateTotalScore(),
+              pontuacao_atendimento: calculateBlockScore(0),
+              pontuacao_operacao: calculateBlockScore(1),
+              pontuacao_conteudo: calculateBlockScore(2),
+              pontuacao_fidelizacao: calculateBlockScore(3)
+            };
+
+            console.log('📋 LEAD CAPTURADO:', leadData);
+            
+            // Salvar no sessionStorage
+            sessionStorage.setItem('movare_lead_captured', 'true');
+            sessionStorage.setItem('movare_lead_data', JSON.stringify(leadData));
+            
+            // Salvar também no localStorage para histórico
+            const leadsSalvos = JSON.parse(localStorage.getItem('movare_leads') || '[]');
+            leadsSalvos.push(leadData);
+            localStorage.setItem('movare_leads', JSON.stringify(leadsSalvos));
+            
+            // Mostrar resultado
+            showResultPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+
+        skipBtn.addEventListener('click', () => {
+          sessionStorage.setItem('movare_lead_captured', 'skipped');
+          showResultPage();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }, 100);
+    }
+
     function showResultPage() {
       quizArea.classList.add('hidden');
       resultArea.classList.remove('hidden');
       navFooter.style.display = 'none';
       
       const totalScore = calculateTotalScore();
+      const leadData = JSON.parse(sessionStorage.getItem('movare_lead_data') || 'null');
       
       let diagnosisText = '';
       let diagnosisClass = '';
@@ -748,7 +1008,13 @@
         <div class="action-item"><strong>🤝 FIDELIZAÇÃO (${fidelizacaoScore}/8)</strong><br>${fidelizacaoScore<5 ? 'Crie lista VIP. Mande mensagens personalizadas pós-venda.' : 'Lance clube de assinatura ou programa de pontos.'}</div>
       `;
 
+      let savedDataMessage = '';
+      if (leadData && leadData.nome) {
+        savedDataMessage = `<p style="text-align:center; color:#8B0000; font-weight:600; margin-bottom:16px;">✅ Diagnóstico salvo para ${leadData.nome}</p>`;
+      }
+
       resultArea.innerHTML = `
+        ${savedDataMessage}
         <div class="total-score-box">
           <div style="font-size:1.2rem;">PONTUAÇÃO TOTAL</div>
           <div class="score-number">${totalScore}/32</div>
@@ -769,6 +1035,7 @@
         <div style="display:flex; gap:12px;">
           <button class="btn btn-secondary" id="restartBtn">Refazer diagnóstico</button>
           <button class="btn btn-outline" id="shareResultBtn">📤 Compartilhar</button>
+          <button class="btn btn-outline" id="exportLeadsBtn" style="font-size:0.85rem;">📋 Exportar Leads</button>
         </div>
         <div class="logo-movare-mini">
           <span>MOVARE</span> — Assessoria Remota para Perfumaria
@@ -776,6 +1043,7 @@
       `;
 
       document.getElementById('restartBtn').addEventListener('click', () => {
+        sessionStorage.removeItem('movare_lead_captured');
         answers = BLOCKS.map(block => new Array(block.questions.length).fill(null));
         currentBlockIndex = 0;
         quizCompleted = false;
@@ -792,6 +1060,28 @@
         } else {
           alert('Copie o link e compartilhe: ' + shareText);
         }
+      });
+
+      document.getElementById('exportLeadsBtn').addEventListener('click', () => {
+        const leads = JSON.parse(localStorage.getItem('movare_leads') || '[]');
+        if (leads.length === 0) {
+          alert('Nenhum lead capturado ainda.');
+          return;
+        }
+        
+        let csv = 'Nome;Email;Telefone;Data;Pontuação Total;Atendimento;Operação;Conteúdo;Fidelização\n';
+        leads.forEach(lead => {
+          csv += `"${lead.nome}";"${lead.email}";"${lead.telefone}";"${lead.data_captura}";${lead.pontuacao_total};${lead.pontuacao_atendimento};${lead.pontuacao_operacao};${lead.pontuacao_conteudo};${lead.pontuacao_fidelizacao}\n`;
+        });
+        
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'leads_movare_' + new Date().toISOString().slice(0,10) + '.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       });
     }
 
